@@ -6,10 +6,9 @@ use crate::components::grid::Grid;
 
 #[function_component]
 fn App() -> Html {
-
     html! {
         <>
-            <Grid/>
+            <Grid width=3/>
         </>
     }
 }
