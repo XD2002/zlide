@@ -5,6 +5,7 @@ use crate::components::loading::Loading;
 
 #[derive(Properties, PartialEq)]
 pub struct GridProps {
+    #[prop_or(3)]
     pub width: usize
 }
 

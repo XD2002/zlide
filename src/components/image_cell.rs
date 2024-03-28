@@ -2,7 +2,9 @@ use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
 pub struct ImageCellProps {
+    #[prop_or_default]
     pub _nr: i32,
+    #[prop_or_default]
     pub image: String
 }
 
