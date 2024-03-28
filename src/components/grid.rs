@@ -60,14 +60,28 @@ fn can_swap(i1: i32, i2: i32, width: i32) -> bool {
         _ if i1 < 0 || i2 < 0 => {
             false
         }
-        _ if i1 > 2_i32.pow(width as u32) || i2 > 2_i32.pow(width as u32) => {
+        _ if i1 >= 2_i32.pow(width as u32) || i2 >= 2_i32.pow(width as u32) => {
             false
         }
-        _ if i1 % width + 1 != i2 % width || i1 % width != i2 % width + 1 => {
+        _ if i1 % width == width - 1 && i2 % width == 0 || i2 % width == width - 1 && i1 % width == 0 => {
             false
         }
         (_,_) => {
             true
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_can_swap_same_row() {
+        assert_eq!(can_swap(1,2,3), true);
+    }
+
+    #[test]
+    fn test_can_swap_crossing_borders() {
+        assert_eq!(can_swap(2,3,3), false);
     }
 }
