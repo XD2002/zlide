@@ -1,4 +1,5 @@
 use yew::prelude::*;
+use web_sys::console;
 
 use crate::components::image_cell::ImageCell;
 use crate::components::loading::Loading;
@@ -19,18 +20,69 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
         image.set(image_clone);
     }
 
-    /*let onclick = {
+    let onclick_move_left = {
         let empty_square = empty_square.clone();
-        let mut image_clone = image.to_vec();
-        move |_:Event| {
-            if is_valid_index(*empty_square, width as i32) {
-                image_clone.swap(*empty_square as usize, (*empty_square - 1) as usize);
+        let image = image.clone();
+        move |_:MouseEvent| {
+            console::log_2(&(*empty_square).into(), &(*empty_square - 1).into());
+            if can_swap(*empty_square, (*empty_square) - 1, width as i32) {
+                console::log_1(&"swap".into());
+                let mut image_vec = image.to_vec();
+                image_vec.swap(*empty_square as usize, ((*empty_square) - 1) as usize);
                 let new_empty_square = *empty_square - 1;
                 empty_square.set(new_empty_square);
-                image.set(image_clone);
+                image.set(image_vec);
             }
         }
-    };*/
+    };
+
+    let onclick_move_right = {
+        let empty_square = empty_square.clone();
+        let image = image.clone();
+        move |_:MouseEvent| {
+            console::log_2(&(*empty_square).into(), &(*empty_square + 1).into());
+            if can_swap(*empty_square, (*empty_square) + 1, width as i32) {
+                console::log_1(&"swap".into());
+                let mut image_vec = image.to_vec();
+                image_vec.swap(*empty_square as usize, ((*empty_square) + 1) as usize);
+                let new_empty_square = *empty_square + 1;
+                empty_square.set(new_empty_square);
+                image.set(image_vec);
+            }
+        }
+    };
+
+    let onclick_move_up = {
+        let empty_square = empty_square.clone();
+        let image = image.clone();
+        move |_:MouseEvent| {
+            console::log_2(&(*empty_square).into(), &(*empty_square - width as i32).into());
+            if can_swap(*empty_square, (*empty_square) - width as i32, width as i32) {
+                console::log_1(&"swap".into());
+                let mut image_vec = image.to_vec();
+                image_vec.swap(*empty_square as usize, ((*empty_square) - width as i32) as usize);
+                let new_empty_square = *empty_square - width as i32;
+                empty_square.set(new_empty_square);
+                image.set(image_vec);
+            }
+        }
+    };
+
+    let onclick_move_down = {
+        let empty_square = empty_square.clone();
+        let image = image.clone();
+        move |_:MouseEvent| {
+            console::log_2(&(*empty_square).into(), &(*empty_square + width as i32).into());
+            if can_swap(*empty_square, (*empty_square) + width as i32, width as i32) {
+                console::log_1(&"swap".into());
+                let mut image_vec = image.to_vec();
+                image_vec.swap(*empty_square as usize, ((*empty_square) + width as i32) as usize);
+                let new_empty_square = *empty_square + width as i32;
+                empty_square.set(new_empty_square);
+                image.set(image_vec);
+            }
+        }
+    };
 
     if image.len() == 9 {
     html! {
@@ -45,7 +97,10 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
                     </>
                 }
             })}
-            <button>{"hj"}</button>
+            <button onclick={onclick_move_left}>{"h"}</button>
+            <button onclick={onclick_move_down}>{"j"}</button>
+            <button onclick={onclick_move_up}>{"k"}</button>
+            <button onclick={onclick_move_right}>{"l"}</button>
         </>
     }}
     else {
@@ -58,12 +113,15 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
 fn can_swap(i1: i32, i2: i32, width: i32) -> bool {
     match (i1, i2) {
         _ if i1 < 0 || i2 < 0 => {
+            console::log_1(&"case 0".into());
             false
         }
-        _ if i1 >= 2_i32.pow(width as u32) || i2 >= 2_i32.pow(width as u32) => {
+        _ if i1 >= width.pow(2) || i2 >= width.pow(2) => {
+            console::log_1(&"case 1".into());
             false
         }
-        _ if i1 % width == width - 1 && i2 % width == 0 || i2 % width == width - 1 && i1 % width == 0 => {
+        _ if (i1 % width == width - 1 && i2 % width == 0) || (i2 % width == width - 1 && i1 % width == 0) => {
+            console::log_1(&"case 2".into());
             false
         }
         (_,_) => {
@@ -83,5 +141,10 @@ mod tests {
     #[test]
     fn test_can_swap_crossing_borders() {
         assert_eq!(can_swap(2,3,3), false);
+    }
+
+    #[test]
+    fn test_can_swap_same_row_2() {
+        assert_eq!(can_swap(8,7, 3), true);
     }
 }
