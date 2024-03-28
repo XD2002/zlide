@@ -1,4 +1,4 @@
-use yew::prelude::*;
+use yew::{Properties, function_component, Html, use_state, MouseEvent, html};
 
 use crate::components::image_cell::ImageCell;
 use crate::components::loading::Loading;

@@ -1,4 +1,4 @@
-use yew::prelude::*;
+use yew::{Properties, function_component, Html, html};
 
 #[derive(Properties, PartialEq)]
 pub struct ImageCellProps {

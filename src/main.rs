@@ -1,4 +1,4 @@
-use yew::prelude::*;
+use yew::{function_component, Html, html};
 
 mod components;
 
