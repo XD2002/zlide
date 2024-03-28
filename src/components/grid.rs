@@ -14,7 +14,7 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     let image = use_state(|| vec!["https://rustacean.net/assets/rustacean-flat-happy.svg"; 8]);
     let empty_square = use_state(|| 8);
 
-    if image.len() < 9 {
+    if image.len() < width.pow(2) {
         let mut image_clone = image.to_vec();
         image_clone.push("");
         image.set(image_clone);
