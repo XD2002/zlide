@@ -14,7 +14,9 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     let image = use_state(|| vec!["https://rustacean.net/assets/rustacean-flat-happy.svg"; 8]);
     let empty_square = use_state(|| 8);
 
-    if image.len() < width.pow(2) {
+    let number_of_squares = width.pow(2);
+
+    if image.len() < number_of_squares {
         let mut image_clone = image.to_vec();
         image_clone.push("");
         image.set(image_clone);
@@ -76,26 +78,27 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
         }
     };
 
-    if image.len() == 9 {
-    html! {
-        <>
-            {for (0..9).into_iter().map(|nr| {
-                html! {
-                    <>
-                        <ImageCell _nr={nr} image={image[nr as usize]}/>
-                        if (nr + 1) % width as i32 == 0 {
-                            <br/>
-                        }
-                    </>
-                }
-            })}
-            <button onclick={onclick_move_left}>{"h"}</button>
-            <button onclick={onclick_move_down}>{"j"}</button>
-            <button onclick={onclick_move_up}>{"k"}</button>
-            <button onclick={onclick_move_right}>{"l"}</button>
-        </>
-    }}
-    else {
+
+    if image.len() == number_of_squares {
+        html! {
+            <>
+                {for (0..number_of_squares).into_iter().map(|nr| {
+                    html! {
+                        <>
+                            <ImageCell /*_nr={nr}*/ image={image[nr]}/>
+                            if (nr as i32 + 1) % width as i32 == 0 {
+                                <br/>
+                            }
+                        </>
+                    }
+                })}
+                <button onclick={onclick_move_left}>{"h"}</button>
+                <button onclick={onclick_move_down}>{"j"}</button>
+                <button onclick={onclick_move_up}>{"k"}</button>
+                <button onclick={onclick_move_right}>{"l"}</button>
+            </>
+        }
+    } else {
         html! {
             <Loading/>
         }
@@ -103,11 +106,12 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
 }
 
 fn can_swap(i1: i32, i2: i32, width: i32) -> bool {
+    let number_of_squares = width.pow(2);
     match (i1, i2) {
         _ if i1 < 0 || i2 < 0 => {
             false
         }
-        _ if i1 >= width.pow(2) || i2 >= width.pow(2) => {
+        _ if i1 >= number_of_squares || i2 >= number_of_squares => {
             false
         }
         _ if (i1 % width == width - 1 && i2 % width == 0) || (i2 % width == width - 1 && i1 % width == 0) => {
