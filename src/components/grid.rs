@@ -2,6 +2,7 @@ use yew::{Properties, function_component, Html, use_state, MouseEvent, html};
 
 use crate::components::image_cell::ImageCell;
 use crate::components::loading::Loading;
+use crate::models::grid_cell_content::GridCellContent;
 
 #[derive(Properties, PartialEq)]
 pub struct GridProps {
@@ -11,14 +12,18 @@ pub struct GridProps {
 
 #[function_component]
 pub fn Grid(&GridProps {width}: &GridProps) -> Html {
-    let image = use_state(|| vec!["https://rustacean.net/assets/rustacean-flat-happy.svg"; 8]);
+    let mut img_vec: Vec<GridCellContent> = Vec::new();
+    for i in 0..8 {
+        img_vec.push(GridCellContent::new("https://rustacean.net/assets/rustacean-flat-happy.svg".to_string(),i))
+    }
+    let image = use_state(|| img_vec);
     let empty_square = use_state(|| 8);
 
     let number_of_squares = width.pow(2);
 
     if image.len() < number_of_squares {
         let mut image_clone = image.to_vec();
-        image_clone.push("");
+        image_clone.push(GridCellContent::new("".to_string(),8));
         image.set(image_clone);
     }
 
@@ -85,7 +90,7 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
                 {for (0..number_of_squares).into_iter().map(|nr| {
                     html! {
                         <>
-                            <ImageCell /*_nr={nr}*/ image={image[nr]}/>
+                            <ImageCell image={image[nr].clone().img}/>
                             if (nr as i32 + 1) % width as i32 == 0 {
                                 <br/>
                             }
