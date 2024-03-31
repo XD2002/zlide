@@ -21,22 +21,31 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
 
     let number_of_squares = width.pow(2);
 
+    let solved = use_state(|| false);
+
     if image.len() < number_of_squares {
         let mut image_clone = image.to_vec();
         image_clone.push(GridCellContent::new("".to_string(),8));
+        //image_clone.swap(7,8);
         image.set(image_clone);
     }
 
     let onclick_move_left = {
         let empty_square = empty_square.clone();
         let image = image.clone();
+        let solved = solved.clone();
         move |_:MouseEvent| {
             if can_swap(*empty_square, (*empty_square) - 1, width as i32) {
                 let mut image_vec = image.to_vec();
                 image_vec.swap(*empty_square as usize, ((*empty_square) - 1) as usize);
                 let new_empty_square = *empty_square - 1;
                 empty_square.set(new_empty_square);
-                image.set(image_vec);
+                image.set(image_vec.clone());
+                let mut solved_change = *solved;
+                if is_solved(image_vec.clone()) {
+                    solved_change = true;
+                }
+                solved.set(solved_change);
             }
         }
     };
@@ -44,13 +53,19 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     let onclick_move_right = {
         let empty_square = empty_square.clone();
         let image = image.clone();
+        let solved = solved.clone();
         move |_:MouseEvent| {
             if can_swap(*empty_square, (*empty_square) + 1, width as i32) {
                 let mut image_vec = image.to_vec();
                 image_vec.swap(*empty_square as usize, ((*empty_square) + 1) as usize);
                 let new_empty_square = *empty_square + 1;
                 empty_square.set(new_empty_square);
-                image.set(image_vec);
+                image.set(image_vec.clone());
+                let mut solved_change = *solved;
+                if is_solved(image_vec.clone()) {
+                    solved_change = true;
+                }
+                solved.set(solved_change);
             }
         }
     };
@@ -58,13 +73,19 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     let onclick_move_up = {
         let empty_square = empty_square.clone();
         let image = image.clone();
+        let solved = solved.clone();
         move |_:MouseEvent| {
             if can_swap(*empty_square, (*empty_square) - width as i32, width as i32) {
                 let mut image_vec = image.to_vec();
                 image_vec.swap(*empty_square as usize, ((*empty_square) - width as i32) as usize);
                 let new_empty_square = *empty_square - width as i32;
                 empty_square.set(new_empty_square);
-                image.set(image_vec);
+                image.set(image_vec.clone());
+                let mut solved_change = *solved;
+                if is_solved(image_vec.clone()) {
+                    solved_change = true;
+                }
+                solved.set(solved_change);
             }
         }
     };
@@ -72,13 +93,19 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     let onclick_move_down = {
         let empty_square = empty_square.clone();
         let image = image.clone();
+        let solved = solved.clone();
         move |_:MouseEvent| {
             if can_swap(*empty_square, (*empty_square) + width as i32, width as i32) {
                 let mut image_vec = image.to_vec();
                 image_vec.swap(*empty_square as usize, ((*empty_square) + width as i32) as usize);
                 let new_empty_square = *empty_square + width as i32;
                 empty_square.set(new_empty_square);
-                image.set(image_vec);
+                image.set(image_vec.clone());
+                let mut solved_change = *solved;
+                if is_solved(image_vec.clone()) {
+                    solved_change = true;
+                }
+                solved.set(solved_change);
             }
         }
     };
@@ -101,6 +128,9 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
                 <button onclick={onclick_move_down}>{"j"}</button>
                 <button onclick={onclick_move_up}>{"k"}</button>
                 <button onclick={onclick_move_right}>{"l"}</button>
+                if *solved{
+                    <p>{"solved"}</p>
+                }
             </>
         }
     } else {
@@ -126,6 +156,15 @@ fn can_swap(i1: i32, i2: i32, width: i32) -> bool {
             true
         }
     }
+}
+
+fn is_solved(image: Vec<GridCellContent>) -> bool {
+    for i in 0..9 {
+        if image[i].correct_spot != i as i32 {
+            return false
+        }
+    }
+    return true
 }
 
 #[cfg(test)]
