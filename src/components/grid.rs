@@ -1,4 +1,7 @@
 use yew::{Properties, function_component, Html, use_state, MouseEvent, html};
+use rand::seq::SliceRandom;
+use web_sys::console;
+use rand::thread_rng;
 
 use crate::components::image_cell::ImageCell;
 use crate::components::loading::Loading;
@@ -13,18 +16,22 @@ pub struct GridProps {
 #[function_component]
 pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     let mut img_vec: Vec<GridCellContent> = Vec::new();
-    for i in 0..8 {
-        img_vec.push(GridCellContent::new("https://rustacean.net/assets/rustacean-flat-happy.svg".to_string(),i))
-    }
-    let image = use_state(|| img_vec);
+
     let empty_square = use_state(|| 8);
 
     let number_of_squares = width.pow(2);
 
     let solved = use_state(|| false);
 
+    for i in 0..8 {
+        //img_vec.push(GridCellContent::new("https://rustacean.net/assets/rustacean-flat-happy.svg".to_string(),i))
+        img_vec.push(GridCellContent::new(format!("images/image{i}.png").to_string(),i))
+    }
+    let image = use_state(|| img_vec);
+
     if image.len() < number_of_squares {
         let mut image_clone = image.to_vec();
+        image_clone.shuffle(&mut thread_rng());
         image_clone.push(GridCellContent::new("".to_string(),8));
         //image_clone.swap(7,8);
         image.set(image_clone);
@@ -124,10 +131,10 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
                         </>
                     }
                 })}
-                <button onclick={onclick_move_left}>{"h"}</button>
-                <button onclick={onclick_move_down}>{"j"}</button>
-                <button onclick={onclick_move_up}>{"k"}</button>
-                <button onclick={onclick_move_right}>{"l"}</button>
+                <button onclick={onclick_move_left}>{"left"}</button>
+                <button onclick={onclick_move_down}>{"down"}</button>
+                <button onclick={onclick_move_up}>{"up"}</button>
+                <button onclick={onclick_move_right}>{"right"}</button>
                 if *solved{
                     <p>{"solved"}</p>
                 }
