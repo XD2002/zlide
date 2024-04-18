@@ -17,26 +17,28 @@ pub struct GridProps {
 pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     let mut img_vec: Vec<GridCellContent> = Vec::new();
 
-    let empty_square = use_state(|| 8);
-
     let number_of_squares = width.pow(2);
-
-    let solved = use_state(|| false);
-
+    
+    // initialising img_vec with static images
     for i in 0..8 {
         //img_vec.push(GridCellContent::new("https://rustacean.net/assets/rustacean-flat-happy.svg".to_string(),i))
         img_vec.push(GridCellContent::new(format!("images/image{i}.png").to_string(),i))
     }
-    let image = use_state(|| img_vec);
 
+    // use_states
+    let empty_square = use_state(|| 8);
+    let solved = use_state(|| false);
+    let image = use_state(|| img_vec);
+    
+    // shuffling the images randomly + adding the empty square
     if image.len() < number_of_squares {
         let mut image_clone = image.to_vec();
         image_clone.shuffle(&mut thread_rng());
         image_clone.push(GridCellContent::new("".to_string(),8));
-        //image_clone.swap(7,8);
         image.set(image_clone);
     }
-
+    
+    // defining the functions used in the buttons used for movement of the empty square
     let onclick_move_left = {
         let empty_square = empty_square.clone();
         let image = image.clone();
@@ -121,20 +123,17 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     if image.len() == number_of_squares {
         html! {
             <>
-                {for (0..number_of_squares).into_iter().map(|nr| {
-                    html! {
-                        <>
+                <div class="container auto grid grid-cols-3">
+                    {for (0..number_of_squares).into_iter().map(|nr| {
+                        html! {
                             <ImageCell image={image[nr].clone().img}/>
-                            if (nr as i32 + 1) % width as i32 == 0 {
-                                <br/>
-                            }
-                        </>
-                    }
-                })}
-                <button onclick={onclick_move_left}>{"left"}</button>
-                <button onclick={onclick_move_down}>{"down"}</button>
-                <button onclick={onclick_move_up}>{"up"}</button>
-                <button onclick={onclick_move_right}>{"right"}</button>
+                        }
+                    })}
+                </div>
+                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_left}>{"left"}</button>
+                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_down}>{"down"}</button>
+                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_up}>{"up"}</button>
+                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_right}>{"right"}</button>
                 if *solved{
                     <p>{"solved"}</p>
                 }
