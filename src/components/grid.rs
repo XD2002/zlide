@@ -1,5 +1,6 @@
 use yew::{Properties, function_component, Html, use_state, MouseEvent, html};
 use rand::seq::SliceRandom;
+#[allow(unused_imports)]
 use web_sys::console;
 use rand::thread_rng;
 
