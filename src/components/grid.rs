@@ -33,8 +33,9 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     // shuffling the images randomly + adding the empty square
     if image.len() < number_of_squares {
         let mut image_clone = image.to_vec();
+        // TODO: fix shuffling
         image_clone.shuffle(&mut thread_rng());
-        image_clone.push(GridCellContent::new("".to_string(),8));
+        image_clone.push(GridCellContent::new_empty_square(8));
         image.set(image_clone);
     }
     
