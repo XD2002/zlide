@@ -1,13 +1,12 @@
 use yew::{Properties, function_component, Html, use_state, MouseEvent, html};
-use rand::seq::SliceRandom;
 #[allow(unused_imports)]
 use web_sys::console;
-use rand::thread_rng;
 
 use crate::components::image_cell::ImageCell;
 use crate::components::loading::Loading;
 use crate::models::grid_cell_content::GridCellContent;
 use crate::tools::grid_checks::*;
+use crate::tools::shuffler::shuffle_grid;
 
 #[derive(Properties, PartialEq)]
 pub struct GridProps {
@@ -35,10 +34,12 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     // shuffling the images randomly + adding the empty square
     if image.len() < number_of_squares {
         let mut image_clone = image.to_vec();
-        // TODO: fix shuffling
-        image_clone.shuffle(&mut thread_rng());
+        let empty_square = empty_square.clone();
+        let mut empty_square_i32 = *empty_square;
         image_clone.push(GridCellContent::new_empty_square(8));
+        shuffle_grid(&mut image_clone, &mut empty_square_i32);
         image.set(image_clone);
+        empty_square.set(empty_square_i32);
     }
     
     // defining the functions used in the buttons used for movement of the empty square
