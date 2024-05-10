@@ -22,7 +22,6 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     
     // initialising img_vec with static images
     for i in 0..8 {
-        //img_vec.push(GridCellContent::new("https://rustacean.net/assets/rustacean-flat-happy.svg".to_string(),i))
         img_vec.push(GridCellContent::new(format!("images/image{i}.png").to_string(),i))
     }
 
