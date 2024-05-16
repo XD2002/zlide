@@ -11,6 +11,6 @@ pub struct ImageCellProps {
 #[function_component]
 pub fn ImageCell(ImageCellProps {_nr, image}: &ImageCellProps) -> Html {
     html! {
-        <img src={image.clone()}/>
+        <img class="inset-0 w-full h-full object-cover" src={image.clone()}/>
     }
 }

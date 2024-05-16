@@ -126,17 +126,23 @@ pub fn Grid(&GridProps {width}: &GridProps) -> Html {
     if image.len() == number_of_squares {
         html! {
             <>
-                <div class="container auto grid grid-cols-3">
+                <div class="container auto grid grid-cols-3 gap-0">
                     {for (0..number_of_squares).into_iter().map(|nr| {
                         html! {
-                            <ImageCell image={image[nr].clone().img}/>
+                            <div class="relative w-full h-full">
+                                <ImageCell image={image[nr].clone().img}/>
+                            </div> 
                         }
                     })}
                 </div>
-                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_left}>{"left"}</button>
-                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_down}>{"down"}</button>
-                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_up}>{"up"}</button>
-                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_right}>{"right"}</button>
+                <div class="container auto grid grid-cols-3">
+                    <div></div>
+                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_up}>{"up"}</button>
+                    <div></div>
+                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_left}>{"left"}</button>
+                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_down}>{"down"}</button>
+                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onclick={onclick_move_right}>{"right"}</button>
+                </div>
                 if *solved{
                     <p>{"solved"}</p>
                 }
